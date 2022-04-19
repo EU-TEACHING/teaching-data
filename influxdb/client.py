@@ -21,7 +21,11 @@ class InfluxDBClientHandler:
     def __call__(self, input_fn):
 
         for msg in input_fn: 
-            p = Point(msg.topic).field(msg.body.id, msg.body.value) # TODO: Specify the convention of messages
+            p = Point.from_dict({
+                'measurement': msg.topic,
+                'fields': msg.body,
+                'time': msg.timestamp
+            })
             self._write_api.write(bucket=self._bucket, record=p)
 
     def _build(self):
