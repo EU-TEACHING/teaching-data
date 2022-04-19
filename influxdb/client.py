@@ -17,7 +17,7 @@ class InfluxDBClientHandler:
         self._client = None
         self._write_api = None
     
-    @TEACHINGNode(producer=False, consumer=True)
+    @TEACHINGNode(produce=False, consume=True)
     def __call__(self, input_fn):
 
         for msg in input_fn: 
