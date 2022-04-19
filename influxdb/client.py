@@ -16,11 +16,14 @@ class InfluxDBClientHandler:
 
         self._client = None
         self._write_api = None
+
+        self._build()
     
     @TEACHINGNode(produce=False, consume=True)
     def __call__(self, input_fn):
 
-        for msg in input_fn: 
+        for msg in input_fn:
+            print(msg)
             p = Point.from_dict({
                 'measurement': msg.topic,
                 'fields': msg.body,
