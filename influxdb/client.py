@@ -1,6 +1,8 @@
 import os
+import time
 
 from base.node import TEACHINGNode
+from urllib3.util.retry import Retry
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 
@@ -35,6 +37,7 @@ class InfluxDBClientHandler:
         self._client = InfluxDBClient(
             url=f'http://{self._host}:{self._port}', 
             token=self._token, 
-            org=self._org
+            org=self._org,
+            retries=Retry(10, backoff_factor=2.)
         )
         self._write_api = self._client.write_api(write_options=SYNCHRONOUS)
