@@ -1,6 +1,5 @@
 ARG ARCH
-FROM chronis10/teaching-base:latest-${ARCH}
-ARG ARCH
+FROM chronis10/teaching-base:${ARCH}
 WORKDIR /app
 COPY /influxdb /app/influxdb
 COPY main.py /app/main.py
