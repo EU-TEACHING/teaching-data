@@ -1,5 +1,6 @@
 import os
 import time
+from typing import List
 
 from base.node import TEACHINGNode
 from urllib3.util.retry import Retry
@@ -26,12 +27,21 @@ class InfluxDBClientHandler:
 
         for msg in input_fn:
             print(msg)
-            p = Point.from_dict({
-                'measurement': msg.topic,
-                'fields': msg.body,
-                'time': msg.timestamp
-            })
-            self._write_api.write(bucket=self._bucket, record=p)
+            if isinstance(msg.timestamp, List):
+                for i in range(len(msg.timestamp)):
+                    p = Point.from_dict({
+                        'measurement': msg.topic,
+                        'fields': msg.body[i],
+                        'time': msg.timestamp[i]
+                    })
+                    self._write_api.write(bucket=self._bucket, record=p)
+            else:
+                p = Point.from_dict({
+                    'measurement': msg.topic,
+                    'fields': msg.body,
+                    'time': msg.timestamp
+                })
+                self._write_api.write(bucket=self._bucket, record=p)
 
     def _build(self):
         self._client = InfluxDBClient(
